@@ -73,10 +73,11 @@ ls -la build/libLPTA.so
 
 ```sh
 # emit unoptimized IR (the optimizer runs on top of this)
-clang-18 -O0 -Xclang -disable-O0-optnone -emit-llvm -S example.c -o example.ll
+clang -O2 -Xclang -disable-llvm-passes -emit-llvm -S lpta_test.c -o lpta_test.ll
+
 
 # capture the -O2 pipeline -> writes example.json
-./lpta-run.sh example.ll example -O 2
+./lpta-run.sh lpta_test.ll lpta_test -O 2
 ```
 
 `lpta-run.sh` usage:
@@ -96,15 +97,15 @@ LPTA_PLUGIN=/path/to/libLPTA.so ./lpta-run.sh example.ll example -O 2
 **Command line:**
 
 ```sh
-python3 lpta.py list example.json              # ranked overview of every pass
-python3 lpta.py show example.json InstCombine  # one pass as a before/after diff
+python3 lpta.py list lpta_test.json              # ranked overview of every pass
+python3 lpta.py show lpta_test.json InstCombine  # one pass as a before/after diff
 python3 lpta.py diff base.json edit.json       # compare two runs (regression view)
 ```
 
 **Web viewer:**
 
 ```sh
-python3 lpta_view.py example.json              # single run
+python3 lpta_view.py lpta_test.json             # single run
 python3 lpta_view.py base.json edit.json       # cross-run comparison
 ```
 
